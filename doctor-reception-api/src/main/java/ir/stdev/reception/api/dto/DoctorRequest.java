@@ -1,5 +1,9 @@
 package ir.stdev.reception.api.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import ir.stdev.reception.api.annotation.ValidateNationalCode;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,17 +16,27 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class DoctorRequest {
-    //    @Schema(description = "نام")
+    @Schema(description = "نام")
+    @NotNull
+    @NotEmpty
     private String name;
-    //    @Schema(description = "نام خانوادگی")
+    @Schema(description = "نام خانوادگی")
+    @NotNull
+    @NotEmpty
     private String family;
-    //    @Schema(description = "کد ملی")
+    @Schema(description = "کد ملی")
+    @NotNull
+    @ValidateNationalCode(message = "کد ملی وارد شده نامعتبر است")
     private String nationalCode;
-    //    @Schema(description = "رتبه")
+    @Schema(description = "رتبه")
+    @NotNull
+    @NotEmpty
     private Grade grade;
-    //    @Schema(description = "تاریخ تولد")
+    @Schema(description = "تاریخ تولد")
     private Date birthDate;
-    //    @Schema(description = "تخصص")
+    @Schema(description = "تخصص")
+    @NotNull
+    @NotEmpty
     private String expertise;
 
 }

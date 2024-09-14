@@ -6,6 +6,7 @@ import ir.stdev.reception.api.dto.DoctorResponse;
 import ir.stdev.reception.api.dto.UpdateDoctorRequest;
 import ir.stdev.reception.api.facade.DoctorFacade;
 import ir.stdev.reception.service.api.persistence.DoctorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +20,12 @@ public class DoctorController implements DoctorFacade {
     private final DoctorService doctorService;
 
     @Override
-    public DoctorResponse createDoctor(DoctorRequest request) {
+    public DoctorResponse createDoctor(@Valid DoctorRequest request) {
         return doctorService.create(request);
     }
 
     @Override
-    public DoctorResponse updateDoctor(UpdateDoctorRequest request) {
+    public DoctorResponse updateDoctor(@Valid UpdateDoctorRequest request) {
         return doctorService.update(request);
     }
 

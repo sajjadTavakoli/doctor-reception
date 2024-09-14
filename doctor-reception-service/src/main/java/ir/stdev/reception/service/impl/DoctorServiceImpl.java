@@ -6,13 +6,14 @@ import ir.stdev.reception.api.dto.UpdateDoctorRequest;
 import ir.stdev.reception.api.exception.DoctorReceptionRunTimeException;
 import ir.stdev.reception.service.api.persistence.DoctorService;
 import ir.stdev.reception.service.api.persistence.DoctorStorage;
+import ir.stdev.reception.service.dto.DoctorDTO;
 import ir.stdev.reception.service.exception.DoctorEntityNotFundException;
 import ir.stdev.reception.service.mapper.DoctorServiceMapper;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,12 +25,9 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorResponse create(DoctorRequest request) {
-        try {
-            doctorStorage.findByNationalCode(request.getNationalCode());
-            throw new DoctorReceptionRunTimeException("دکتر با مشخصات وارد شده تکراری است");
-        } catch (DoctorEntityNotFundException e) {
+        if (!doctorStorage.findByNationalCode(request.getNationalCode()).isPresent())
             return doctorStorage.addDoctor(mapper.toDoctorDto(request));
-        }
+        else throw new DoctorReceptionRunTimeException("دکتر با مشخصات وارد شده تکراری است");
     }
 
     @Override
@@ -64,7 +62,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public DoctorResponse getByNameAndFamily(String name, String family) {
         try {
-            return mapper.toDoctorResponse(doctorStorage.findByNameAndFamily(name,family));
+            return mapper.toDoctorResponse(doctorStorage.findByNameAndFamily(name, family));
         } catch (DoctorEntityNotFundException e) {
             throw new DoctorReceptionRunTimeException(e.getMessage());
         }
@@ -72,11 +70,9 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorResponse getByNationalCode(String nationalCode) {
-        try {
-            return mapper.toDoctorResponse(doctorStorage.findByNationalCode(nationalCode));
-        } catch (DoctorEntityNotFundException e) {
-            throw new DoctorReceptionRunTimeException(e.getMessage());
-        }
+        Optional<DoctorDTO> doctor = doctorStorage.findByNationalCode(nationalCode);
+        if (doctor.isPresent()) return mapper.toDoctorResponse(doctor.get());
+        else throw new DoctorReceptionRunTimeException("دکتر با مشخصات وارد شده یافت نشد");
     }
 
     @Override

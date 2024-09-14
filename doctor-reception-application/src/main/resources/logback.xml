@@ -1,0 +1,44 @@
+<configuration>
+    <property name="APPLICATION_LEVEL" value="INFO"/>
+    <property name="PERSISTENCE_LEVEL" value="WARN"/>
+    <property name="DEPENDENCY_LEVEL" value="DEBUG"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty name="LOG_PATH" source="logging.file" defaultValue="logs" />
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/application.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <appender name="SERVER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/server.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/server.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.example" level="${APPLICATION_LEVEL}" additivity="false">
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="ir.stdev.reception" level="${APPLICATION_LEVEL}" additivity="false">
+        <appender-ref ref="SERVER"/>
+    </logger>
+    <logger name="ir.stdev.reception.persistence" level="${PERSISTENCE_LEVEL}" additivity="false">
+        <appender-ref ref="SERVER"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

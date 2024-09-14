@@ -1,13 +1,12 @@
 package ir.stdev.reception.persistence;
 
 import ir.stdev.reception.api.dto.DoctorResponse;
-import ir.stdev.reception.api.exception.DoctorReceptionRunTimeException;
 import ir.stdev.reception.persistence.entity.DoctorEntity;
-import ir.stdev.reception.service.exception.DoctorEntityNotFundException;
 import ir.stdev.reception.persistence.mapper.DoctorMapper;
 import ir.stdev.reception.persistence.repository.DoctorRepository;
 import ir.stdev.reception.service.api.persistence.DoctorStorage;
 import ir.stdev.reception.service.dto.DoctorDTO;
+import ir.stdev.reception.service.exception.DoctorEntityNotFundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +31,9 @@ public class DoctorStorageImpl implements DoctorStorage {
     }
 
     @Override
-    public DoctorDTO findByNationalCode(String nationalCode) throws DoctorEntityNotFundException {
-        return mapper.toDto(repository.findByNationalCode(nationalCode).orElseThrow(() -> new DoctorEntityNotFundException("دکتر با این مشخصات پیدا نشد")));
+    public Optional<DoctorDTO> findByNationalCode(String nationalCode) {
+        Optional<DoctorEntity> doctor = repository.findByNationalCode(nationalCode);
+        return doctor.isPresent() ? Optional.of(mapper.toDto(doctor.get())) : Optional.empty();
     }
 
     @Override
@@ -43,12 +43,12 @@ public class DoctorStorageImpl implements DoctorStorage {
 
     @Override
     public DoctorDTO findByNameAndFamily(String name, String family) throws DoctorEntityNotFundException {
-        return mapper.toDto(repository.findByNameAndFamily(name,family).orElseThrow(() -> new DoctorEntityNotFundException("دکتر با این مشخصات یافت نشد")));
+        return mapper.toDto(repository.findByNameAndFamily(name, family).orElseThrow(() -> new DoctorEntityNotFundException("دکتر با این مشخصات یافت نشد")));
     }
 
     @Override
-    public List<DoctorDTO> findByExpertise(String expertise) throws DoctorEntityNotFundException{
-        return mapper.toDots(repository.findByExpertise(expertise).orElseThrow(()-> new DoctorEntityNotFundException("هیچ دکتری با این تخصص یافت نشد")));
+    public List<DoctorDTO> findByExpertise(String expertise) throws DoctorEntityNotFundException {
+        return mapper.toDots(repository.findByExpertise(expertise).orElseThrow(() -> new DoctorEntityNotFundException("هیچ دکتری با این تخصص یافت نشد")));
     }
 
     @Override
@@ -63,9 +63,9 @@ public class DoctorStorageImpl implements DoctorStorage {
             if (doctor.isPresent()) {
                 repository.deleteById(id);
                 return true;
-            }else
+            } else
                 return false;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
