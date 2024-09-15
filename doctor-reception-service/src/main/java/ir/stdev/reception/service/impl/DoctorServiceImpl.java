@@ -25,7 +25,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorResponse create(DoctorRequest request) {
-        if (!doctorStorage.findByNationalCode(request.getNationalCode()).isPresent())
+        if (doctorStorage.findByNationalCode(request.getNationalCode()).isEmpty())
             return doctorStorage.addDoctor(mapper.toDoctorDto(request));
         else throw new DoctorReceptionRunTimeException("دکتر با مشخصات وارد شده تکراری است");
     }
