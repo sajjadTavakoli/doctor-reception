@@ -12,6 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Schema(name = "DoctorResponse", description = "پاسخ ایجاد دکتر")
 public class DoctorResponse {
 
     @Schema(description = "شناسه")

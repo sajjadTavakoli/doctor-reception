@@ -15,6 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Schema(name = "DoctorRequest", description = "درخواست ایجاد دکتر")
 public class DoctorRequest {
     @Schema(description = "نام")
     @NotNull

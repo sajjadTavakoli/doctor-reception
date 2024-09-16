@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Schema(name = "UpdateDoctorRequest", description = "درخواست ویرایش دکتر")
 public class UpdateDoctorRequest extends DoctorRequest {
 
     @Schema(description = "شناسه")
